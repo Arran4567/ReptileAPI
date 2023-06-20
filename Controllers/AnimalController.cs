@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Any;
-using Newtonsoft.Json.Linq;
+using ReptileAPI.Authentication;
 using ReptileAPI.Data.DAL.WorkUnits;
 using ReptileAPI.Models;
 
@@ -24,33 +25,39 @@ namespace ReptileAPI.Controllers
             _animalWorkUnit = animalWorkUnit;
         }
 
-        [HttpGet("GetAll")]
+        [Roles (UserRoles.Admin, UserRoles.User)]
+        [HttpGet]
+        [Route("GetAll")]
         public IEnumerable<Animal> GetAll()
         {
             return _animalWorkUnit.AnimalRepository.Get();
         }
 
-        [HttpGet("GetById")]
+        [HttpGet]
+        [Route("GetById")]
         public Animal Get(Guid id)
         {
             return _animalWorkUnit.AnimalRepository.GetByID(id);
         }
 
-        [HttpPost("Create")]
+        [HttpPost]
+        [Route("Create")]
         public void Create(Animal animal)
         {
             _animalWorkUnit.AnimalRepository.Insert(animal);
             _animalWorkUnit.Save();
         }
 
-        [HttpPost("Update")]
+        [HttpPost]
+        [Route("Update")]
         public void Update(Animal animal)
         {
             _animalWorkUnit.AnimalRepository.Update(animal);
             _animalWorkUnit.Save();
         }
 
-        [HttpDelete("DeleteById")]
+        [HttpDelete]
+        [Route("DeleteById")]
         public void DeleteById(Guid id)
         {
             _animalWorkUnit.AnimalRepository.Delete(id);
