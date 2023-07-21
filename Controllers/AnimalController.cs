@@ -35,6 +35,7 @@ namespace ReptileAPI.Controllers
 
         [HttpGet]
         [Route("GetById")]
+        [Roles(UserRoles.Admin, UserRoles.User)]
         public Animal Get(Guid id)
         {
             return _animalWorkUnit.AnimalRepository.GetByID(id);
@@ -42,6 +43,7 @@ namespace ReptileAPI.Controllers
 
         [HttpPost]
         [Route("Create")]
+        [Roles(UserRoles.Admin, UserRoles.User)]
         public void Create(Animal animal)
         {
             _animalWorkUnit.AnimalRepository.Insert(animal);
@@ -50,6 +52,7 @@ namespace ReptileAPI.Controllers
 
         [HttpPost]
         [Route("Update")]
+        [Roles(UserRoles.Admin, UserRoles.User)]
         public void Update(Animal animal)
         {
             _animalWorkUnit.AnimalRepository.Update(animal);
@@ -58,6 +61,7 @@ namespace ReptileAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteById")]
+        [Roles(UserRoles.Admin, UserRoles.User)]
         public void DeleteById(Guid id)
         {
             _animalWorkUnit.AnimalRepository.Delete(id);
@@ -65,6 +69,7 @@ namespace ReptileAPI.Controllers
         }
 
         [HttpDelete("Delete")]
+        [Roles(UserRoles.Admin, UserRoles.User)]
         public void DeleteEntity(Animal animal)
         {
             _animalWorkUnit.AnimalRepository.Delete(animal);
