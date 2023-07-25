@@ -8,7 +8,7 @@ namespace ReptileAPI.Models
     {
         public Guid Id { get; set; }
 
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         [DisplayName("Date of Birth")]
         public DateTime DOB { get; set; }
