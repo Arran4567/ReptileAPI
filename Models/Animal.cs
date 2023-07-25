@@ -15,5 +15,7 @@ namespace ReptileAPI.Models
 
         [NotMapped]
         public int Age { get{ return new DateTime((DateTime.Now - DOB).Ticks).Year - 1;} }
+
+        public string? Species { get; set; } 
     }
 }
