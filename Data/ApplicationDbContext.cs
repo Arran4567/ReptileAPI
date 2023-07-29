@@ -22,6 +22,7 @@ namespace ReptileAPI.Data
         {
             // Link DB Table to Model
             modelBuilder.Entity<Animal>().ToTable("Animals");
+            modelBuilder.Entity<Species>().ToTable("Species");
             base.OnModelCreating(modelBuilder);
         }
 

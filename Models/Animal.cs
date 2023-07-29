@@ -1,19 +1,27 @@
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReptileAPI.Models
 {
     public class Animal
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
-        public string Species { get; set; }
+        [Required]
+        [ForeignKey("SpeciesId")]
+        public virtual Species Species { get; set; }
 
+        [Required]
         public string Sex { get; set; }
 
+        [Required]
         [DisplayName("Date of Birth")]
         public DateTime DOB { get; set; }
 
