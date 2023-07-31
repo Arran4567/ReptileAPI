@@ -27,5 +27,6 @@ namespace ReptileAPI.Data
         }
 
         public DbSet<Animal> Animals { get; set; }
+        public DbSet<Species> Species { get; set; }
     }
 }
