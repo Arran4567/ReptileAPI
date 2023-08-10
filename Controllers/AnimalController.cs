@@ -11,11 +11,6 @@ namespace ReptileAPI.Controllers
     [ApiController]
     public class AnimalController : ControllerBase
     {
-        private static readonly string[] Names = new[]
-        {
-        "Kaiba", "Mokuba", "Seto", "Anubis", "Iris"
-    };
-
         private readonly ILogger<AnimalController> _logger;
         private readonly AnimalWorkUnit _animalWorkUnit;
 
