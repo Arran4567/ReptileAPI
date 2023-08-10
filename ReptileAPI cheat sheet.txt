@@ -1,0 +1,8 @@
+1. Authentication – The logic behind login and tokens (This can be ignored for now)
+2. Controllers – This is used to allow external access to the program and manipulate the backend
+3. Data – This is the connection to the database, manipulation of the database and used to create migrations
+   a. DAL
+      i. Repositories – Used to create, read, update and delete data in the database
+      ii. Work Units – Used to create more complex manipulation of database information
+4. Migrations – This is how the program tells the database to be built
+5. Models – These are the objects which can be converted to tables within the database
