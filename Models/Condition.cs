@@ -4,11 +4,13 @@ using System.ComponentModel;
 
 namespace ReptileAPI.Models
 {
-    public class Morph
+    public class Condition
     {
         [Key]
         public Guid Id { get; set; }
-        [Required]
-        public string Name { get; set; }
+        public double HotSpotTemp { get; set; }
+        public double AmbientTemp { get; set; }
+        public int Humidity { get; set; }
+
     }
 }
