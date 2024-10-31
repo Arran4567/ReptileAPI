@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Any;
 using ReptileAPI.Authentication;
 using ReptileAPI.Data.DAL.WorkUnits;
 using ReptileAPI.Models;
+using System.Linq.Expressions;
 
 namespace ReptileAPI.Controllers
 {
@@ -25,7 +26,8 @@ namespace ReptileAPI.Controllers
         [Route("GetAll")]
         public IEnumerable<Animal> GetAll()
         {
-            return _animalWorkUnit.AnimalRepository.Get();
+            var includes = new Expression<Func<Animal, object>>[] { x => x.Morphs, x => x.Species };
+            return _animalWorkUnit.AnimalRepository.Get(includes: includes);
         }
 
         [HttpGet]

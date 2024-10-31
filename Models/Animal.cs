@@ -28,7 +28,6 @@ namespace ReptileAPI.Models
         [NotMapped]
         public int Age { get { return new DateTime((DateTime.Now - DOB).Ticks).Year - 1; } }
 
-        public virtual List<Morph> Morphs { get; set; }
 
         [DisplayName("Feeding Size")]
         public string? Feeding_Size { get; set; }
@@ -41,5 +40,6 @@ namespace ReptileAPI.Models
 
         [DisplayName("Bedding Change")]
         public int? Bedding_Change { get; set; }
+        public virtual List<Morph> Morphs { get; set; }
     }
 }

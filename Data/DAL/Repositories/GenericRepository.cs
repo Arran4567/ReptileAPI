@@ -19,31 +19,22 @@ namespace ReptileAPI.Data.DAL.Repositories
         }
 
         public virtual IEnumerable<TEntity> Get(
-            Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "")
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+            Expression<Func<TEntity, bool>>[]? filters = null,
+            Expression<Func<TEntity, object>>[]? includes = null)
         {
-            IQueryable<TEntity> query = dbSet;
+            var query = dbSet.AsQueryable();
 
-            if (filter != null)
+            if (filters != null)
             {
-                query = query.Where(filter);
-            }
-
-            foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProperty);
+                foreach (var filter in filters)
+                    query = query.Where(filter);
             }
 
-            if (orderBy != null)
-            {
-                return orderBy(query).ToList();
-            }
-            else
-            {
-                return query.ToList();
-            }
+            foreach (var include in includes)
+                query = query.Include(include);
+
+            return orderBy != null ? orderBy(query).ToList() : query.ToList();
         }
 
         public virtual TEntity GetByID(object id)
