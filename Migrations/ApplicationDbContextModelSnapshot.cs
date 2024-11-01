@@ -264,6 +264,9 @@ namespace ReptileAPI.Migrations
                     b.Property<Guid>("SpeciesId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int?>("Water_Change")
                         .HasColumnType("int");
 
@@ -271,7 +274,29 @@ namespace ReptileAPI.Migrations
 
                     b.HasIndex("SpeciesId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Animals", (string)null);
+                });
+
+            modelBuilder.Entity("ReptileAPI.Models.Condition", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("AmbientTemp")
+                        .HasColumnType("float");
+
+                    b.Property<double>("HotSpotTemp")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Humidity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Conditions", (string)null);
                 });
 
             modelBuilder.Entity("ReptileAPI.Models.Morph", b =>
@@ -295,11 +320,16 @@ namespace ReptileAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ConditionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ConditionId");
 
                     b.ToTable("Species", (string)null);
                 });
@@ -378,7 +408,29 @@ namespace ReptileAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ReptileAPI.Authentication.ApplicationUser", "User")
+                        .WithMany("Animals")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Species");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ReptileAPI.Models.Species", b =>
+                {
+                    b.HasOne("ReptileAPI.Models.Condition", "Condition")
+                        .WithMany()
+                        .HasForeignKey("ConditionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Condition");
+                });
+
+            modelBuilder.Entity("ReptileAPI.Authentication.ApplicationUser", b =>
+                {
+                    b.Navigation("Animals");
                 });
 #pragma warning restore 612, 618
         }

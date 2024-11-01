@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Any;
 using ReptileAPI.Authentication;
 using ReptileAPI.Data.DAL.WorkUnits;
 using ReptileAPI.Models;
@@ -14,63 +13,125 @@ namespace ReptileAPI.Controllers
     {
         private readonly ILogger<AnimalController> _logger;
         private readonly AnimalWorkUnit _animalWorkUnit;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AnimalController(ILogger<AnimalController> logger, AnimalWorkUnit animalWorkUnit)
+        public AnimalController(ILogger<AnimalController> logger, AnimalWorkUnit animalWorkUnit, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _animalWorkUnit = animalWorkUnit;
+            _userManager = userManager;
         }
 
-        [Roles (UserRoles.Admin, UserRoles.User)]
+        [Roles(UserRoles.Admin, UserRoles.User)]
         [HttpGet]
         [Route("GetAll")]
-        public IEnumerable<Animal> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var includes = new Expression<Func<Animal, object>>[] { x => x.Morphs, x => x.Species };
-            return _animalWorkUnit.AnimalRepository.Get(includes: includes);
+            try
+            {
+                var user = await _userManager.FindByNameAsync(User.Identity.Name);
+                var filters = new Expression<Func<Animal, bool>>[] { x => x.User == user };
+                var includes = new Expression<Func<Animal, object>>[] { x => x.Morphs, x => x.Species, x => x.User };
+                return Ok(_animalWorkUnit.AnimalRepository.Get(filters: filters, includes: includes));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
         [Route("GetById")]
         [Roles(UserRoles.Admin, UserRoles.User)]
-        public Animal Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            return _animalWorkUnit.AnimalRepository.GetByID(id);
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var animal = _animalWorkUnit.AnimalRepository.GetByID(id);
+            return animal.User == user ? Ok(animal) : BadRequest();
         }
 
         [HttpPost]
         [Route("Create")]
         [Roles(UserRoles.Admin, UserRoles.User)]
-        public void Create(Animal animal)
+        public async Task<IActionResult> Create(Animal animal)
         {
-            _animalWorkUnit.AnimalRepository.Insert(animal);
-            _animalWorkUnit.Save();
+            try
+            {
+                var user = await _userManager.FindByNameAsync(User.Identity.Name);
+                animal.User = user;
+                _animalWorkUnit.AnimalRepository.Insert(animal);
+                _animalWorkUnit.Save();
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
         [Route("Update")]
         [Roles(UserRoles.Admin, UserRoles.User)]
-        public void Update(Animal animal)
+        public async Task<IActionResult> Update(Animal animal)
         {
-            _animalWorkUnit.AnimalRepository.Update(animal);
-            _animalWorkUnit.Save();
+            try
+            {
+                var user = await _userManager.FindByNameAsync(User.Identity.Name);
+                if (animal.User == user)
+                {
+                    _animalWorkUnit.AnimalRepository.Update(animal);
+                    _animalWorkUnit.Save();
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete]
         [Route("DeleteById")]
         [Roles(UserRoles.Admin, UserRoles.User)]
-        public void DeleteById(Guid id)
+        public async Task<IActionResult> DeleteById(Guid id)
         {
-            _animalWorkUnit.AnimalRepository.Delete(id);
-            _animalWorkUnit.Save();
+            try
+            {
+                var user = await _userManager.FindByNameAsync(User.Identity.Name);
+                var animal = _animalWorkUnit.AnimalRepository.GetByID(id);
+                if(animal.User == user){
+                    _animalWorkUnit.AnimalRepository.Delete(id);
+                    _animalWorkUnit.Save();
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("Delete")]
         [Roles(UserRoles.Admin, UserRoles.User)]
-        public void DeleteEntity(Animal animal)
+        public async Task<IActionResult> DeleteEntity(Animal animal)
         {
-            _animalWorkUnit.AnimalRepository.Delete(animal);
-            _animalWorkUnit.Save();
+            try
+            {
+                var user = await _userManager.FindByNameAsync(User.Identity.Name);
+                if (animal.User == user)
+                {
+                    _animalWorkUnit.AnimalRepository.Delete(animal);
+                    _animalWorkUnit.Save();
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

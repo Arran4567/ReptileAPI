@@ -1,14 +1,15 @@
+using ReptileAPI.Authentication;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ReptileAPI.Models
 {
     public class Animal
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [Required]
@@ -40,6 +41,9 @@ namespace ReptileAPI.Models
 
         [DisplayName("Bedding Change")]
         public int? Bedding_Change { get; set; }
-        public virtual List<Morph> Morphs { get; set; }
+        public virtual List<Morph>? Morphs { get; set; }
+
+        [JsonIgnore]
+        public virtual ApplicationUser? User { get; set; }
     }
 }

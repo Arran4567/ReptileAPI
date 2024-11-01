@@ -2,9 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using ReptileAPI.Authentication;
 using ReptileAPI.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ReptileAPI.Data
 {
@@ -24,11 +21,13 @@ namespace ReptileAPI.Data
             modelBuilder.Entity<Animal>().ToTable("Animals");
             modelBuilder.Entity<Species>().ToTable("Species");
             modelBuilder.Entity<Morph>().ToTable("Morphs");
+            modelBuilder.Entity<Condition>().ToTable("Conditions");
             base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Animal> Animals { get; set; }
         public DbSet<Species> Species { get; set; }
         public DbSet<Morph> Morphs { get; set; }
+        public DbSet<Condition> Conditions { get; set; }
     }
 }

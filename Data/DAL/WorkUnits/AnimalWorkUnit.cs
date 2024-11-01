@@ -1,10 +1,5 @@
-﻿using ReptileAPI.Data;
-using ReptileAPI.Data.DAL;
-using ReptileAPI.Data.DAL.Repositories;
+﻿using ReptileAPI.Data.DAL.Repositories;
 using ReptileAPI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ReptileAPI.Data.DAL.WorkUnits
 {

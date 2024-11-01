@@ -1,18 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
-using System.Text.Json.Serialization;
 
 namespace ReptileAPI.Models
 {
-    public class Morph
+    public class Condition
     {
         [Key]
         public Guid Id { get; set; }
-        [Required]
-        public string Name { get; set; }
+        public double HotSpotTemp { get; set; }
+        public double AmbientTemp { get; set; }
+        public int Humidity { get; set; }
 
-        [JsonIgnore]
-        public virtual List<Animal>? Animals { get; set; }
     }
 }
